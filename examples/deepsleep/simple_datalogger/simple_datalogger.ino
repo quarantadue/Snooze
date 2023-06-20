@@ -28,11 +28,6 @@ const uint8_t BUTTON = 7;
 // use bounce for pin 4, debounce of 5ms
 Bounce button = Bounce(BUTTON, 5);
 
-// buffer to hold data for printing, this is because the -
-// Serial Monitor takes a few seconds to come back online -
-// after waking up from sleep mode
-static char print_buffer[2000] = {0};
-
 // install driver into SnoozeBlock
 #if defined(__IMXRT1062__) | defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__)
 SnoozeBlock config_teensy(usb, digital);

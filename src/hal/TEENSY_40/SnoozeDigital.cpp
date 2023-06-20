@@ -9,14 +9,14 @@
 
 #include "SnoozeDigital.h"
 
-#define DR    0
-#define GDIR  1
-#define PSR   2
-#define ICR1  3
-#define ICR2  4
-#define IMR   5
-#define ISR   6
-#define EDGE  7
+//#define DR    0
+#define GPIO_INDEX_GDIR  1
+#define GPIO_INDEX_PSR   2
+#define GPIO_INDEX_ICR1  3
+#define GPIO_INDEX_ICR2  4
+#define GPIO_INDEX_IMR   5
+#define GPIO_INDEX_ISR   6
+#define GPIO_INDEX_EDGE  7
 
 #ifdef __cplusplus
 extern "C" {
@@ -96,7 +96,7 @@ void SnoozeDigital::enableDriver( uint8_t mode ) {
         if ( mode == 3 ) {
             volatile uint32_t *gpio = portOutputRegister( pinNumber );
             switch( ( uint32_t )gpio ) {
-                case ( uint32_t )&GPIO6_DR: {
+                case IMXRT_GPIO6_ADDRESS: {
                     if ( ( GPIO1_IMR & 0xFFFF0000 ) && return_gpio1_16_31_irq == 0 ) {
                         return_isr_gpio1_16_31_enabled = NVIC_IS_ENABLED( IRQ_GPIO1_16_31 );
                         NVIC_DISABLE_IRQ( IRQ_GPIO1_16_31 );
@@ -129,7 +129,7 @@ void SnoozeDigital::enableDriver( uint8_t mode ) {
                     IOMUXC_GPR_GPR26 &= ~( GPIO1_IMR & 0xFFFF );
                     break;
                 }
-                case ( uint32_t )&GPIO7_DR: {
+                case IMXRT_GPIO7_ADDRESS: {
                     if ( ( GPIO2_IMR & 0xFFFF0000 ) && return_gpio2_16_31_irq == 0 ) {
                         return_isr_gpio2_16_31_enabled = NVIC_IS_ENABLED( IRQ_GPIO2_16_31 );
                         NVIC_DISABLE_IRQ( IRQ_GPIO2_16_31 );
@@ -162,7 +162,7 @@ void SnoozeDigital::enableDriver( uint8_t mode ) {
                     IOMUXC_GPR_GPR27 &= ~( GPIO2_IMR & 0xFFFF );
                     break;
                 }
-                case ( uint32_t )&GPIO8_DR: {
+                case IMXRT_GPIO8_ADDRESS: {
                     if ( ( GPIO3_IMR & 0xFFFF0000 ) && return_gpio3_16_31_irq == 0 ) {
                         return_isr_gpio3_16_31_enabled = NVIC_IS_ENABLED( IRQ_GPIO3_16_31 );
                         NVIC_DISABLE_IRQ( IRQ_GPIO3_16_31 );
@@ -195,7 +195,7 @@ void SnoozeDigital::enableDriver( uint8_t mode ) {
                     IOMUXC_GPR_GPR28 &= ~( GPIO3_IMR & 0xFFFF );
                     break;
                 }
-                case ( uint32_t )&GPIO9_DR: {
+                case IMXRT_GPIO9_ADDRESS: {
                     if ( ( GPIO4_IMR & 0xFFFF0000 ) && return_gpio4_16_31_irq == 0 ) {
                         return_isr_gpio4_16_31_enabled = NVIC_IS_ENABLED( IRQ_GPIO4_16_31 );
                         NVIC_DISABLE_IRQ( IRQ_GPIO4_16_31 );
@@ -266,7 +266,7 @@ void SnoozeDigital::disableDriver( uint8_t mode ) {
         if ( mode == 3 ) {
             volatile uint32_t *gpio = portOutputRegister( pinNumber );
             switch( ( uint32_t )gpio ) {
-                case ( uint32_t )&GPIO6_DR: {
+                case IMXRT_GPIO6_ADDRESS: {
                     if ( ( GPIO1_IMR & 0xFFFF0000 ) && return_gpio1_16_31_irq != 0 ) {
                         NVIC_SET_PRIORITY( IRQ_GPIO1_16_31, return_priority_gpio1_16_31 );
                         __disable_irq( );
@@ -289,7 +289,7 @@ void SnoozeDigital::disableDriver( uint8_t mode ) {
                     IOMUXC_GPR_GPR26 |= ( GPIO1_IMR & 0xFFFF );
                     break;
                 }
-                case ( uint32_t )&GPIO7_DR: {
+                case IMXRT_GPIO7_ADDRESS: {
                     if ( ( GPIO2_IMR & 0xFFFF0000 ) ) {
                         NVIC_SET_PRIORITY( IRQ_GPIO2_16_31, return_priority_gpio2_16_31 );
                         __disable_irq( );
@@ -312,7 +312,7 @@ void SnoozeDigital::disableDriver( uint8_t mode ) {
                     IOMUXC_GPR_GPR27 |= ( GPIO2_IMR & 0xFFFF );
                     break;
                 }
-                case ( uint32_t )&GPIO8_DR: {
+                case IMXRT_GPIO8_ADDRESS: {
                     if ( ( GPIO3_IMR & 0xFFFF0000 ) && return_gpio2_16_31_irq != 0 ) {
                         NVIC_SET_PRIORITY( IRQ_GPIO3_16_31, return_priority_gpio3_16_31 );
                         __disable_irq( );
@@ -335,7 +335,7 @@ void SnoozeDigital::disableDriver( uint8_t mode ) {
                     IOMUXC_GPR_GPR28 |= ( GPIO3_IMR & 0xFFFF );
                     break;
                 }
-                case ( uint32_t )&GPIO9_DR: {
+                case IMXRT_GPIO9_ADDRESS: {
                     if ( ( GPIO4_IMR & 0xFFFF0000 ) && return_gpio4_16_31_irq != 0 ) {
                         NVIC_SET_PRIORITY( IRQ_GPIO4_16_31, return_priority_gpio4_16_31 );
                         __disable_irq( );
@@ -386,25 +386,25 @@ void SnoozeDigital::clearIsrFlags( uint32_t ipsr ) {
         volatile uint32_t *gpio = portOutputRegister( pinNumber );
         if ( sleep_type == 3 ) {
             switch( ( uint32_t )gpio ) {
-                case ( uint32_t )&GPIO6_DR:
+                case IMXRT_GPIO6_ADDRESS:
                     gpio = &GPIO1_DR;
                     break;
-                case ( uint32_t )&GPIO7_DR:
+                case IMXRT_GPIO7_ADDRESS:
                     gpio = &GPIO2_DR;
                     break;
-                case ( uint32_t )&GPIO8_DR:
+                case IMXRT_GPIO8_ADDRESS:
                     gpio = &GPIO3_DR;
                     break;
-                case ( uint32_t )&GPIO9_DR:
+                case IMXRT_GPIO9_ADDRESS:
                     gpio = &GPIO4_DR;
                     break;
                 default:
                     break;
             }
         }
-        uint32_t status = gpio[ISR] & gpio[IMR];
+        uint32_t status = gpio[GPIO_INDEX_ISR] & gpio[GPIO_INDEX_IMR];
         if ( status ) {
-            gpio[ISR] = status;
+            gpio[GPIO_INDEX_ISR] = status;
         }
         detachDigitalInterrupt( pinNumber );// remove pin interrupt
     }
@@ -421,16 +421,16 @@ void SnoozeDigital::attachDigitalInterrupt( uint8_t pin, int type ) {
     volatile uint32_t *gpio = portOutputRegister( pin );
     if ( sleep_type == 3 ) {
         switch( ( uint32_t )gpio ) {
-            case ( uint32_t )&GPIO6_DR:
+            case IMXRT_GPIO6_ADDRESS:
                 gpio = &GPIO1_DR;
                 break;
-            case ( uint32_t )&GPIO7_DR:
+            case IMXRT_GPIO7_ADDRESS:
                 gpio = &GPIO2_DR;
                 break;
-            case ( uint32_t )&GPIO8_DR:
+            case IMXRT_GPIO8_ADDRESS:
                 gpio = &GPIO3_DR;
                 break;
-            case ( uint32_t )&GPIO9_DR:
+            case IMXRT_GPIO9_ADDRESS:
                 gpio = &GPIO4_DR;
                 break;
             default:
@@ -450,24 +450,24 @@ void SnoozeDigital::attachDigitalInterrupt( uint8_t pin, int type ) {
         default: return;
     }
     // TODO: global interrupt disable to protect these read-modify-write accesses?
-    gpio[IMR] &= ~mask;    // disable interrupt
+    gpio[GPIO_INDEX_IMR] &= ~mask;    // disable interrupt
     *mux = 5;               // pin is GPIO
-    gpio[GDIR] &= ~mask;    // pin to input mode
+    gpio[GPIO_INDEX_GDIR] &= ~mask;    // pin to input mode
     uint32_t index = __builtin_ctz( mask );
     if ( type == CHANGE ) {
-        gpio[EDGE] |= mask;
+        gpio[GPIO_INDEX_EDGE] |= mask;
     } else {
-        gpio[EDGE] &= ~mask;
+        gpio[GPIO_INDEX_EDGE] &= ~mask;
         if ( index < 15 ) {
             uint32_t shift = index * 2;
-            gpio[ICR1] = (gpio[ICR1] & ~( 3 << shift ) ) | ( icr << shift );
+            gpio[GPIO_INDEX_ICR1] = (gpio[GPIO_INDEX_ICR1] & ~( 3 << shift ) ) | ( icr << shift );
         } else {
             uint32_t shift = ( index - 16 ) * 2;
-            gpio[ICR2] = ( gpio[ICR2] & ~( 3 << shift ) ) | ( icr << shift );
+            gpio[GPIO_INDEX_ICR2] = ( gpio[GPIO_INDEX_ICR2] & ~( 3 << shift ) ) | ( icr << shift );
         }
     }
-    gpio[ISR] = mask;  // clear any prior pending interrupt
-    gpio[IMR] |= mask; // enable interrupt
+    gpio[GPIO_INDEX_ISR] = mask;  // clear any prior pending interrupt
+    gpio[GPIO_INDEX_IMR] |= mask; // enable interrupt
 
 }
 
@@ -481,16 +481,16 @@ void SnoozeDigital::detachDigitalInterrupt( uint8_t pin ) {
     volatile uint32_t *gpio = portOutputRegister( pin );
     if ( sleep_type == 2 ) {
         switch( ( uint32_t )gpio ) {
-            case ( uint32_t )&GPIO6_DR:
+            case IMXRT_GPIO6_ADDRESS:
                 gpio = &GPIO1_DR;
                 break;
-            case ( uint32_t )&GPIO7_DR:
+            case IMXRT_GPIO7_ADDRESS:
                 gpio = &GPIO2_DR;
                 break;
-            case ( uint32_t )&GPIO8_DR:
+            case IMXRT_GPIO8_ADDRESS:
                 gpio = &GPIO3_DR;
                 break;
-            case ( uint32_t )&GPIO9_DR:
+            case IMXRT_GPIO9_ADDRESS:
                 gpio = &GPIO4_DR;
                 break;
             default:
@@ -498,6 +498,6 @@ void SnoozeDigital::detachDigitalInterrupt( uint8_t pin ) {
         }
     }
     uint32_t mask = digitalPinToBitMask( pin );
-    gpio[IMR] &= ~mask;
+    gpio[GPIO_INDEX_IMR] &= ~mask;
 }
 #endif /* __IMXRT1062__ */
