@@ -45,6 +45,8 @@
 #include "hal/TEENSY_40/hal.h"
 #endif
 /***************************************************************************/
+#define SNOOZE_VERSION "6.3.10"
+/***************************************************************************/
 class SnoozeClass {
 private:
     static volatile uint32_t PCR3;
